@@ -105,33 +105,4 @@ const Tiles = () => {
   );
 };
 
-// export const getServerSideProps = ({ query }) => {
-//   const level = +query.level;
-
-//   if (!level) {
-//     return {
-//       redirect: {
-//         destination: "/tiles?level=1",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   // let emojisDetail = [];
-
-//   // for (let i = 1; i <= level; i++) {
-//   //   const emoji = getRandomEmoji();
-//   //   emojisDetail.push(createEmoji(emoji));
-//   //   emojisDetail.push(createEmoji(emoji));
-//   // }
-
-//   // emojisDetail = emojisDetail.sort((a, b) => Math.random() - 0.5);
-
-//   return {
-//     props: {
-//       // emojisDetail,
-//     },
-//   };
-// };
-
 export default Tiles;
