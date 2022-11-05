@@ -12,11 +12,6 @@ const Tiles = () => {
   const [levelCompleted, setLevelCompleted] = useState(false);
   const { query, replace } = useRouter();
 
-  // is no level then we add a level in the url
-  useEffect(() => {
-    if (!query.level) replace("/tiles?level=1");
-  }, []);
-
   // generating the emojis based on the level
   useEffect(() => {
     let emojisDetail = [];
@@ -103,6 +98,22 @@ const Tiles = () => {
       </Box>
     </Box>
   );
+};
+
+export const getServerSideProps = async ({ query }) => {
+  const level = query.level;
+
+  if (!level) {
+    return {
+      redirect: {
+        destination: "/tiles?level=1",
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 };
 
 export default Tiles;
