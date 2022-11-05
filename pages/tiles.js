@@ -7,15 +7,17 @@ import { createEmoji, isLevelCompleted } from "../utils";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-const Tiles = ({}) => {
+const Tiles = () => {
   const [emojis, setEmojis] = useState([]);
   const [levelCompleted, setLevelCompleted] = useState(false);
   const { query, replace } = useRouter();
 
+  // is no level then we add a level in the url
   useEffect(() => {
     if (!query.level) replace("/tiles?level=1");
   }, []);
 
+  // generating the emojis based on the level
   useEffect(() => {
     let emojisDetail = [];
     for (let i = 1; i <= +query.level; i++) {
@@ -27,10 +29,12 @@ const Tiles = ({}) => {
     setEmojis(emojisDetail);
   }, [query.level]);
 
+  // handling the levels logic here
   useEffect(() => {
     setLevelCompleted(isLevelCompleted(emojis));
   }, [emojis]);
 
+  // getting the emojis from local storage
   useEffect(() => {
     const localEmojis = JSON.parse(localStorage.getItem("emojis"));
     const localLevel = JSON.parse(localStorage.getItem("level"));
@@ -61,6 +65,7 @@ const Tiles = ({}) => {
       currentlySelected.matched = true;
       currentlySelected.selected = false;
 
+      // storing the emojis in the local storage
       localStorage.setItem("emojis", JSON.stringify(emojis));
       localStorage.setItem("level", +query.level);
     }
