@@ -7,17 +7,24 @@ import { createEmoji, isLevelCompleted } from "../utils";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-const Tiles = ({ emojisDetail }) => {
-  const [emojis, setEmojis] = useState(emojisDetail);
+const Tiles = ({}) => {
+  const [emojis, setEmojis] = useState([]);
   const [levelCompleted, setLevelCompleted] = useState(false);
   const { query } = useRouter();
 
   useEffect(() => {
+    let emojisDetail = [];
+    for (let i = 1; i <= +query.level; i++) {
+      const emoji = getRandomEmoji();
+      emojisDetail.push(createEmoji(emoji));
+      emojisDetail.push(createEmoji(emoji));
+    }
+    emojisDetail = emojisDetail.sort((a, b) => Math.random() - 0.5);
     setEmojis(emojisDetail);
-  }, [emojisDetail]);
+  }, [query.level]);
 
   useEffect(() => {
-    if (isLevelCompleted(emojis)) setLevelCompleted(true);
+    setLevelCompleted(isLevelCompleted(emojis));
   }, [emojis]);
 
   useEffect(() => {
@@ -101,19 +108,19 @@ export const getServerSideProps = ({ query }) => {
     };
   }
 
-  let emojisDetail = [];
+  // let emojisDetail = [];
 
-  for (let i = 1; i <= level; i++) {
-    const emoji = getRandomEmoji();
-    emojisDetail.push(createEmoji(emoji));
-    emojisDetail.push(createEmoji(emoji));
-  }
+  // for (let i = 1; i <= level; i++) {
+  //   const emoji = getRandomEmoji();
+  //   emojisDetail.push(createEmoji(emoji));
+  //   emojisDetail.push(createEmoji(emoji));
+  // }
 
-  emojisDetail = emojisDetail.sort((a, b) => Math.random() - 0.5);
+  // emojisDetail = emojisDetail.sort((a, b) => Math.random() - 0.5);
 
   return {
     props: {
-      emojisDetail,
+      // emojisDetail,
     },
   };
 };
