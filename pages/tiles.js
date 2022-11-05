@@ -29,11 +29,6 @@ const Tiles = ({ emojisDetail }) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   localStorage.setItem("emojis", JSON.stringify(emojis));
-  //   localStorage.setItem("level", +query.level);
-  // }, [emojis]);
-
   const emojiClickHandler = (id) => {
     const updatedEmojis = [...emojis];
 
@@ -115,8 +110,6 @@ export const getServerSideProps = ({ query }) => {
   }
 
   emojisDetail = emojisDetail.sort((a, b) => Math.random() - 0.5);
-
-  console.log(emojisDetail);
 
   return {
     props: {
