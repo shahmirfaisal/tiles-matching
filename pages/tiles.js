@@ -10,7 +10,11 @@ import Link from "next/link";
 const Tiles = ({}) => {
   const [emojis, setEmojis] = useState([]);
   const [levelCompleted, setLevelCompleted] = useState(false);
-  const { query } = useRouter();
+  const { query, replace } = useRouter();
+
+  useEffect(() => {
+    if (!query.level) replace("/tiles?level=1");
+  }, []);
 
   useEffect(() => {
     let emojisDetail = [];
@@ -96,33 +100,33 @@ const Tiles = ({}) => {
   );
 };
 
-export const getServerSideProps = ({ query }) => {
-  const level = +query.level;
+// export const getServerSideProps = ({ query }) => {
+//   const level = +query.level;
 
-  if (!level) {
-    return {
-      redirect: {
-        destination: "/tiles?level=1",
-        permanent: false,
-      },
-    };
-  }
+//   if (!level) {
+//     return {
+//       redirect: {
+//         destination: "/tiles?level=1",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  // let emojisDetail = [];
+//   // let emojisDetail = [];
 
-  // for (let i = 1; i <= level; i++) {
-  //   const emoji = getRandomEmoji();
-  //   emojisDetail.push(createEmoji(emoji));
-  //   emojisDetail.push(createEmoji(emoji));
-  // }
+//   // for (let i = 1; i <= level; i++) {
+//   //   const emoji = getRandomEmoji();
+//   //   emojisDetail.push(createEmoji(emoji));
+//   //   emojisDetail.push(createEmoji(emoji));
+//   // }
 
-  // emojisDetail = emojisDetail.sort((a, b) => Math.random() - 0.5);
+//   // emojisDetail = emojisDetail.sort((a, b) => Math.random() - 0.5);
 
-  return {
-    props: {
-      // emojisDetail,
-    },
-  };
-};
+//   return {
+//     props: {
+//       // emojisDetail,
+//     },
+//   };
+// };
 
 export default Tiles;
