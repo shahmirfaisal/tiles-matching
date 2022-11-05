@@ -8,36 +8,43 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 const Tiles = () => {
-  const [emojis, setEmojis] = useState([]);
+  const [emojis, setEmojis] = useState([{}]);
   const [levelCompleted, setLevelCompleted] = useState(false);
-  const { query, replace } = useRouter();
+  const [loading, setLoading] = useState(true);
+  const { query, replace, isReady } = useRouter();
 
-  // generating the emojis based on the level
+  // taking to the level page
   useEffect(() => {
-    let emojisDetail = [];
-    for (let i = 1; i <= +query.level; i++) {
-      const emoji = getRandomEmoji();
-      emojisDetail.push(createEmoji(emoji));
-      emojisDetail.push(createEmoji(emoji));
-    }
-    emojisDetail = emojisDetail.sort((a, b) => Math.random() - 0.5);
-    setEmojis(emojisDetail);
-  }, [query.level]);
+    if (isReady && !query.level) replace("/tiles?level=1");
+  }, [isReady]);
 
   // handling the levels logic here
   useEffect(() => {
     setLevelCompleted(isLevelCompleted(emojis));
   }, [emojis]);
 
-  // getting the emojis from local storage
+  // generating the emojis based on the level
   useEffect(() => {
-    const localEmojis = JSON.parse(localStorage.getItem("emojis"));
-    const localLevel = JSON.parse(localStorage.getItem("level"));
+    if (isReady) {
+      const localEmojis = JSON.parse(localStorage.getItem("emojis"));
+      const localLevel = JSON.parse(localStorage.getItem("level"));
 
-    if (localEmojis && localLevel && localLevel == query.level) {
-      setEmojis(localEmojis);
+      if (localEmojis && localLevel && localLevel == query.level) {
+        setEmojis(localEmojis);
+      } else {
+        let emojisDetail = [];
+        for (let i = 1; i <= +query.level; i++) {
+          const emoji = getRandomEmoji();
+          emojisDetail.push(createEmoji(emoji));
+          emojisDetail.push(createEmoji(emoji));
+        }
+        emojisDetail = emojisDetail.sort((a, b) => Math.random() - 0.5);
+        setEmojis(emojisDetail);
+      }
+
+      setLoading(false);
     }
-  }, []);
+  }, [query.level]);
 
   const emojiClickHandler = (id) => {
     const updatedEmojis = [...emojis];
@@ -67,6 +74,8 @@ const Tiles = () => {
 
     setEmojis(updatedEmojis);
   };
+
+  if (loading) return <></>;
 
   return (
     <Box sx={{ maxWidth: "1100px", mx: "auto", px: 4, mt: 5 }}>
@@ -98,22 +107,6 @@ const Tiles = () => {
       </Box>
     </Box>
   );
-};
-
-export const getServerSideProps = async ({ query }) => {
-  const level = query.level;
-
-  if (!level) {
-    return {
-      redirect: {
-        destination: "/tiles?level=1",
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
 };
 
 export default Tiles;
